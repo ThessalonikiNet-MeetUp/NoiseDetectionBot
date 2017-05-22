@@ -86,7 +86,7 @@ namespace SampleAADV2Bot.Dialogs
             var deviceId = Guid.NewGuid();
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             client.BaseAddress = new Uri("sas");
-            await client.PostAsync("sas", someclass);
+            //await client.PostAsync("sas", someclass);
             
 
         }
