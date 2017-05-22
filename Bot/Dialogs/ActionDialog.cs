@@ -9,6 +9,7 @@ namespace SampleAADV2Bot.Dialogs
     using AuthBot.Models;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
+    using SampleAADV2Bot.Controllers;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -59,6 +60,12 @@ namespace SampleAADV2Bot.Dialogs
             {
                 await TokenSample(context);               
             }
+            else if (message.Text == "noise")
+            {        
+                await ConversationStarter.Resume(message.Conversation.Id, message.ChannelId,message.From.Id,message.From.Name, message.Recipient.Id, message.Recipient.Name, message.ServiceUrl);//context.PostAsync("echo");
+                // await context.PostAsync("echo");
+                context.Wait(this.MessageReceivedAsync);
+            }
             else if (message.Text == "logout")
             {
                 await context.Logout();
@@ -76,6 +83,12 @@ namespace SampleAADV2Bot.Dialogs
 
             await context.PostAsync(message);
             context.Wait(MessageReceivedAsync);
+            var deviceId = Guid.NewGuid();
+            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            client.BaseAddress = new Uri("sas");
+            await client.PostAsync("sas", someclass);
+            
+
         }
     }
 }

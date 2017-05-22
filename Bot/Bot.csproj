@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ConversationStarter.cs" />
     <Compile Include="Dialogs\ActionDialog.cs" />
     <Compile Include="Dialogs\DialogExtensions.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
@@ -179,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\NoiseDetectionBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
