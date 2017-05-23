@@ -1,5 +1,8 @@
 ﻿namespace SampleAADV2Bot
 {
+    using Autofac;
+    using Microsoft.Bot.Builder.Dialogs;
+    using SampleAADV2Bot.Middleware;
     using System.Configuration;
     using System.Web.Http;
 
@@ -17,6 +20,9 @@
             AuthBot.Models.AuthSettings.ClientSecret = ConfigurationManager.AppSettings["ActiveDirectory.ClientSecret"];
             AuthBot.Models.AuthSettings.Scopes = ConfigurationManager.AppSettings["ActiveDirectory.Scopes"].Split(',');
 
+            var builder = new ContainerBuilder();
+            builder.RegisterType<DebugActivityLogger>().AsImplementedInterfaces().InstancePerDependency();
+            builder.Update(Conversation.Container);
         }
     }
 }

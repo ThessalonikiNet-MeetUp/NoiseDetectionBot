@@ -10,6 +10,7 @@ namespace SampleAADV2Bot.Dialogs
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
     using SampleAADV2Bot.Controllers;
+    using SampleAADV2Bot.Models;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -40,7 +41,6 @@ namespace SampleAADV2Bot.Dialogs
 
             if (message.Text == "logon")
             {
-                //endpoint v2
                 if (string.IsNullOrEmpty(await context.GetAccessToken(AuthSettings.Scopes)))
                 {
                     await context.Forward(new AzureAuthDialog(AuthSettings.Scopes), this.ResumeAfterAuth, message, CancellationToken.None);
@@ -61,9 +61,8 @@ namespace SampleAADV2Bot.Dialogs
                 await TokenSample(context);               
             }
             else if (message.Text == "noise")
-            {        
+            {
                 await ConversationStarter.Resume(message.Conversation.Id, message.ChannelId,message.From.Id,message.From.Name, message.Recipient.Id, message.Recipient.Name, message.ServiceUrl);//context.PostAsync("echo");
-                // await context.PostAsync("echo");
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "logout")
@@ -80,15 +79,22 @@ namespace SampleAADV2Bot.Dialogs
         private async Task ResumeAfterAuth(IDialogContext context, IAwaitable<string> result)
         {
             var message = await result;
-
             await context.PostAsync(message);
             context.Wait(MessageReceivedAsync);
-            var deviceId = Guid.NewGuid();
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            client.BaseAddress = new Uri("sas");
-            //await client.PostAsync("sas", someclass);
-            
 
+            var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+
+            var user = new User(context.Activity.From.Id, 
+                context.Activity.From.Name, 
+                context.Activity.Recipient.Id, 
+                context.Activity.Recipient.Name,
+                context.Activity.ServiceUrl,
+                accessToken,
+                context.Activity.Conversation.Id, 
+                context.Activity.ChannelId);
+            await user.Save();
+
+            var deviceId = Guid.NewGuid();
         }
     }
 }

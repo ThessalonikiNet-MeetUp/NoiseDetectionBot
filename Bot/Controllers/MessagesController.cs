@@ -1,13 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
 namespace SampleAADV2Bot
 {
-    using System.Linq;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Dialogs;
     using Microsoft.Bot.Builder.Dialogs;
-    using Microsoft.Bot.Builder.FormFlow;
     using Microsoft.Bot.Connector;
     using System.Net.Http;
 
