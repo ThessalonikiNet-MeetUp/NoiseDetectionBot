@@ -84,17 +84,15 @@ namespace SampleAADV2Bot.Dialogs
 
             var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
 
-            var user = new User(context.Activity.From.Id, 
-                context.Activity.From.Name, 
-                context.Activity.Recipient.Id, 
+            await new User(
+                context.Activity.From.Id,
+                context.Activity.From.Name,
+                context.Activity.Recipient.Id,
                 context.Activity.Recipient.Name,
                 context.Activity.ServiceUrl,
                 accessToken,
-                context.Activity.Conversation.Id, 
-                context.Activity.ChannelId);
-            await user.Save();
-
-            var deviceId = Guid.NewGuid();
+                context.Activity.Conversation.Id,
+                context.Activity.ChannelId).Save();
         }
     }
 }

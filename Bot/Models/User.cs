@@ -99,9 +99,9 @@ namespace SampleAADV2Bot.Models
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(BaseAddress);
+                var url = string.Format("{0}/api/SaveBotUserHttpTrigger?code={1}", BaseAddress, FunctionKey);
                 var content = new StringContent(this.ToString(), Encoding.UTF8, "application/json");
-                var result = await client.PostAsync(string.Format("api/SaveBotUserHttpTrigger?code={0}", FunctionKey), content);
+                var result = await client.PostAsync(url, content);
 
                 var body = await result.Content.ReadAsStringAsync();
                 if (!result.IsSuccessStatusCode)
@@ -109,7 +109,6 @@ namespace SampleAADV2Bot.Models
                     await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode} {body}.");
                     return null;
                 }
-
                 return body;
             }
         }
