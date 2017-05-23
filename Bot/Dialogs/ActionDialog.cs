@@ -11,6 +11,8 @@ namespace SampleAADV2Bot.Dialogs
     using Microsoft.Bot.Connector;
     using SampleAADV2Bot.Controllers;
     using SampleAADV2Bot.Models;
+    using System.Diagnostics;
+    using System.Collections.Generic;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -19,7 +21,7 @@ namespace SampleAADV2Bot.Dialogs
         {
             context.Wait(MessageReceivedAsync);
         }
-      
+
         public async Task TokenSample(IDialogContext context)
         {
             //endpoint v2
@@ -37,7 +39,12 @@ namespace SampleAADV2Bot.Dialogs
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
+
+
             var message = await item;
+            //Debug.WriteLine(message.Text+" yuppiii it logs!!!");
+            Trace.TraceInformation(message.Text + " yuppiii it logs!!!");
+            
 
             if (message.Text == "logon")
             {
@@ -58,11 +65,13 @@ namespace SampleAADV2Bot.Dialogs
             }
             else if (message.Text == "token")
             {
-                await TokenSample(context);               
+                await TokenSample(context);
             }
-            else if (message.Text == "noise")
+            else if (message.Text.StartsWith("NDBDATA"))
             {
-                await ConversationStarter.Resume(message.Conversation.Id, message.ChannelId,message.From.Id,message.From.Name, message.Recipient.Id, message.Recipient.Name, message.ServiceUrl);//context.PostAsync("echo");
+                var messageinfo = message.Text.Split(';');
+                var messageDictionary = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
+                await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"]);//context.PostAsync("echo");
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "logout")
@@ -74,8 +83,9 @@ namespace SampleAADV2Bot.Dialogs
             {
                 context.Wait(MessageReceivedAsync);
             }
+
         }
-        
+
         private async Task ResumeAfterAuth(IDialogContext context, IAwaitable<string> result)
         {
             var message = await result;
