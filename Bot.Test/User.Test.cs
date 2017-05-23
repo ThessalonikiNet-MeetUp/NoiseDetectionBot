@@ -8,10 +8,19 @@ namespace Bot.Test
     public class UserTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Serializer()
         {
             var user = new User("id", "name", "botId", "botName", "conversationId", "channelId", "serviceUrl");
             Console.WriteLine(user.ToString());
+        }
+
+        [TestMethod]
+        public void SaveTest()
+        {
+            var user = new User("userId", "username", "botId", "botName", "serviceUrl", "token", "conversationId", "channelId");
+            var id = user.Save().Result;
+            Console.WriteLine(id);
+            Assert.IsNotNull(id);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SampleAADV2Bot.Models
@@ -10,11 +11,16 @@ namespace SampleAADV2Bot.Models
     [DataContract]
     public class User
     {
-        [DataMember]
+        public static string BaseAddress = ConfigurationManager.AppSettings["Endpoint.BaseAddress"];
+        public static string FunctionKey = ConfigurationManager.AppSettings["FunctionKey.SaveBotUser"];
+
         public string Id { get; internal set; }
 
         [DataMember]
-        public string Name { get; internal set; }
+        public string UserId { get; internal set; }
+
+        [DataMember]
+        public string UserName { get; internal set; }
 
         [DataMember]
         public string BotId { get; internal set; }
@@ -35,8 +41,8 @@ namespace SampleAADV2Bot.Models
         public string Token { get; internal set; }
 
         public User(
-            string id, 
-            string name, 
+            string userId, 
+            string username, 
             string botId, 
             string botName, 
             string serviceUrl,
@@ -44,14 +50,14 @@ namespace SampleAADV2Bot.Models
             string conversationId = null, 
             string channelId = null)
         {
-            if (String.IsNullOrEmpty(id))
+            if (String.IsNullOrEmpty(userId))
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentNullException(nameof(userId));
             }
 
-            if (String.IsNullOrEmpty(name))
+            if (String.IsNullOrEmpty(username))
             {
-                throw new ArgumentNullException(nameof(name));
+                throw new ArgumentNullException(nameof(username));
             }
 
             if (String.IsNullOrEmpty(botId))
@@ -74,8 +80,8 @@ namespace SampleAADV2Bot.Models
                 throw new ArgumentNullException(nameof(token));
             }
 
-            Id = id;
-            Name = name;
+            UserId = userId;
+            UserName = username;
             BotId = botId;
             BotName = botName;
             ConversationId = conversationId;
@@ -89,23 +95,22 @@ namespace SampleAADV2Bot.Models
             return JsonConvert.SerializeObject(this);
         }
 
-        public async Task<bool> Save()
+        public async Task<string> Save()
         {
-            var baseAddress = ConfigurationManager.AppSettings["UserDataStore.BaseAddress"];
-            var requestUri = ConfigurationManager.AppSettings["UserDataStore.RequestUri"];
-
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(baseAddress);
-                var content = new StringContent(this.ToString());
-                var result = await client.PostAsync(requestUri, content);
+                client.BaseAddress = new Uri(BaseAddress);
+                var content = new StringContent(this.ToString(), Encoding.UTF8, "application/json");
+                var result = await client.PostAsync(string.Format("api/SaveBotUserHttpTrigger?code={0}", FunctionKey), content);
 
+                var body = await result.Content.ReadAsStringAsync();
                 if (!result.IsSuccessStatusCode)
                 {
-                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode}");
+                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode} {body}.");
+                    return null;
                 }
 
-                return result.IsSuccessStatusCode;
+                return body;
             }
         }
     }
