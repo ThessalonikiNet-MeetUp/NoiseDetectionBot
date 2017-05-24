@@ -14,13 +14,17 @@ namespace SampleAADV2Bot.Models
         public static string BaseAddress = ConfigurationManager.AppSettings["Endpoint.BaseAddress"];
         public static string FunctionKey = ConfigurationManager.AppSettings["FunctionKey.SaveBotUser"];
 
-        public string Id { get; internal set; }
+        [DataMember]
+        public string Email { get; internal set;  }
 
         [DataMember]
-        public string UserId { get; internal set; }
+        public string DisplayName { get; internal set; }
 
         [DataMember]
-        public string UserName { get; internal set; }
+        public string BotUserName { get; internal set; }
+
+        [DataMember]
+        public string BotUserId { get; internal set; }
 
         [DataMember]
         public string BotId { get; internal set; }
@@ -41,23 +45,35 @@ namespace SampleAADV2Bot.Models
         public string Token { get; internal set; }
 
         public User(
-            string userId, 
-            string username, 
+            string email,
+            string displayName,
+            string botUserName, 
+            string botUserId, 
             string botId, 
             string botName, 
             string serviceUrl,
             string token,
-            string conversationId = null, 
-            string channelId = null)
+            string conversationId, 
+            string channelId)
         {
-            if (String.IsNullOrEmpty(userId))
+            if (String.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException(nameof(userId));
+                throw new ArgumentNullException(nameof(email));
             }
 
-            if (String.IsNullOrEmpty(username))
+            if (String.IsNullOrEmpty(displayName))
             {
-                throw new ArgumentNullException(nameof(username));
+                throw new ArgumentNullException(nameof(displayName));
+            }
+
+            if (String.IsNullOrEmpty(botUserName))
+            {
+                throw new ArgumentNullException(nameof(botUserName));
+            }
+
+            if (String.IsNullOrEmpty(botUserId))
+            {
+                throw new ArgumentNullException(nameof(botUserId));
             }
 
             if (String.IsNullOrEmpty(botId))
@@ -80,8 +96,10 @@ namespace SampleAADV2Bot.Models
                 throw new ArgumentNullException(nameof(token));
             }
 
-            UserId = userId;
-            UserName = username;
+            Email = email;
+            DisplayName = displayName;
+            BotUserId = botUserId;
+            BotUserName = botUserName;
             BotId = botId;
             BotName = botName;
             ConversationId = conversationId;

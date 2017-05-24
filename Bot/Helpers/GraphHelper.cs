@@ -25,14 +25,19 @@ namespace SampleAADV2Bot.Helpers
     }
     public class GraphHelper
     {
-        public string Token { get; set; }
+        private string _token;
+
+        public GraphHelper(string token)
+        {
+            _token = token;
+        }
 
         public async Task<UserInfo > GetUserInfo()
         {
             try
             {
                 HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this.Token);
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this._token);
 
                 var userresponse = await client.GetAsync("https://graph.microsoft.com/beta/me/");
                 dynamic userInfo = JObject.Parse(await userresponse.Content.ReadAsStringAsync());

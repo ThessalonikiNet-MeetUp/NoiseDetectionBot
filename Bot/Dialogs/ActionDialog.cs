@@ -12,6 +12,7 @@ namespace SampleAADV2Bot.Dialogs
     using SampleAADV2Bot.Controllers;
     using SampleAADV2Bot.Models;
     using System.Collections.Generic;
+    using SampleAADV2Bot.Helpers;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -88,7 +89,11 @@ namespace SampleAADV2Bot.Dialogs
 
             var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
 
+            var graphHelper = new GraphHelper(accessToken);
+            var userInfo = await graphHelper.GetUserInfo();
             await new User(
+                userInfo.Mail,
+                userInfo.DisplayName,
                 context.Activity.From.Id,
                 context.Activity.From.Name,
                 context.Activity.Recipient.Id,
