@@ -60,8 +60,6 @@ namespace SampleAADV2Bot.Helpers
                     Mail = userInfo.mail,
                     JobTitle = userInfo.jobTitle
                 };
-
-
             }
             catch (Exception)
             {

@@ -133,7 +133,6 @@ namespace SampleAADV2Bot.Models
 
                 if (result.StatusCode == HttpStatusCode.Created)
                 {
-
                     this.DeviceId = body;
                 }
 

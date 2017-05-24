@@ -28,14 +28,12 @@ namespace SampleAADV2Bot.Dialogs
             //endpoint v2
              var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
             
-
             if (string.IsNullOrEmpty(accessToken))
             {
                 return;
             }
 
             await context.PostAsync($"Your access token is: {accessToken}");
-
             context.Wait(MessageReceivedAsync);
         }
 
@@ -51,13 +49,11 @@ namespace SampleAADV2Bot.Dialogs
                 else
                 {
                     await TokenSample(context);
-                    context.Wait(MessageReceivedAsync);
                 }
             }
             else if (message.Text == "echo")
             {
                 await context.PostAsync("echo");
-
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "token")
@@ -81,19 +77,18 @@ namespace SampleAADV2Bot.Dialogs
             {
                 context.Wait(MessageReceivedAsync);
             }
-
         }
 
         private async Task ResumeAfterAuth(IDialogContext context, IAwaitable<string> result)
         {
             var message = await result;
             await context.PostAsync(message);
-            context.Wait(MessageReceivedAsync);
 
-             accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+            accessToken = await context.GetAccessToken(AuthSettings.Scopes);
             
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
+
             var user = new User(
                 userInfo.Mail,
                 userInfo.DisplayName,
@@ -107,15 +102,20 @@ namespace SampleAADV2Bot.Dialogs
                 context.Activity.ChannelId);
             var statusCode = await user.Save();
 
-            if (statusCode == HttpStatusCode.Created)
+            switch (statusCode)
             {
-                await context.PostAsync($"Please enter the following into your listening device: {user.DeviceId}");
-            }
-            else
-            {
-                await context.PostAsync($"Welcome back {user.DisplayName}.");
+                case HttpStatusCode.OK:
+                    await context.PostAsync($"Welcome back {user.DisplayName}.");
+                    break;
+                case HttpStatusCode.Created:
+                    await context.PostAsync($"Please enter the following into your listening device: {user.DeviceId}");
+                    break;
+                default:
+                    await context.PostAsync($"Error, please try again");
+                    break;
             }
 
+            context.Wait(MessageReceivedAsync);
         }
     }
 }
