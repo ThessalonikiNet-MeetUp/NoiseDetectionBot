@@ -13,6 +13,7 @@ namespace SampleAADV2Bot.Dialogs
     using SampleAADV2Bot.Models;
     using System.Collections.Generic;
     using SampleAADV2Bot.Helpers;
+    using System.Net;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -91,10 +92,9 @@ namespace SampleAADV2Bot.Dialogs
 
              accessToken = await context.GetAccessToken(AuthSettings.Scopes);
             
-
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
-            var deviceId =await new User(
+            var user = new User(
                 userInfo.Mail,
                 userInfo.DisplayName,
                 context.Activity.From.Id,
@@ -104,10 +104,18 @@ namespace SampleAADV2Bot.Dialogs
                 context.Activity.ServiceUrl,
                 accessToken,
                 context.Activity.Conversation.Id,
-                context.Activity.ChannelId).Save();
+                context.Activity.ChannelId);
+            var statusCode = await user.Save();
 
+            if (statusCode == HttpStatusCode.Created)
+            {
+                await context.PostAsync($"Please enter the following into your listening device: {user.DeviceId}");
+            }
+            else
+            {
+                await context.PostAsync($"Welcome back {user.DisplayName}.");
+            }
 
-            await context.PostAsync("Your device id ="+deviceId);
         }
     }
 }
