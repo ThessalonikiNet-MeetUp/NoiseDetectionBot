@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Configuration;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
@@ -43,6 +44,9 @@ namespace SampleAADV2Bot.Models
 
         [DataMember]
         public string Token { get; internal set; }
+
+        [IgnoreDataMember]
+        public string DeviceId { get; internal set; }
 
         public User(
             string email,
@@ -113,7 +117,7 @@ namespace SampleAADV2Bot.Models
             return JsonConvert.SerializeObject(this);
         }
 
-        public async Task<string> Save()
+        public async Task<HttpStatusCode> Save()
         {
             using (var client = new HttpClient())
             {
@@ -121,13 +125,18 @@ namespace SampleAADV2Bot.Models
                 var content = new StringContent(this.ToString(), Encoding.UTF8, "application/json");
                 var result = await client.PostAsync(url, content);
 
-                var body = await result.Content.ReadAsStringAsync();
                 if (!result.IsSuccessStatusCode)
                 {
-                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode} {body}.");
-                    return null;
+                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode}.");
                 }
-                return body;
+
+                if (result.StatusCode == HttpStatusCode.Created)
+                {
+                    var body = await result.Content.ReadAsStringAsync();
+                    this.DeviceId = body;
+                }
+
+                return result.StatusCode;
             }
         }
     }
