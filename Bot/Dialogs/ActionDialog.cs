@@ -11,7 +11,6 @@ namespace SampleAADV2Bot.Dialogs
     using Microsoft.Bot.Connector;
     using SampleAADV2Bot.Controllers;
     using SampleAADV2Bot.Models;
-    using System.Diagnostics;
     using System.Collections.Generic;
 
     [Serializable]
@@ -39,13 +38,7 @@ namespace SampleAADV2Bot.Dialogs
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> item)
         {
-
-
             var message = await item;
-            //Debug.WriteLine(message.Text+" yuppiii it logs!!!");
-            Trace.TraceInformation(message.Text + " yuppiii it logs!!!");
-            
-
             if (message.Text == "logon")
             {
                 if (string.IsNullOrEmpty(await context.GetAccessToken(AuthSettings.Scopes)))
@@ -54,6 +47,7 @@ namespace SampleAADV2Bot.Dialogs
                 }
                 else
                 {
+                    await TokenSample(context);
                     context.Wait(MessageReceivedAsync);
                 }
             }

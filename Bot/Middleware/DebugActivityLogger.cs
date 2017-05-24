@@ -9,7 +9,7 @@
     {
         public async Task LogAsync(IActivity activity)
         {
-            Debug.WriteLine($"From={activity.From.Id}. To={activity.Recipient.Id}. Message={activity.AsMessageActivity()?.Text}");
+            Trace.TraceInformation($"From={activity.From.Id}. To={activity.Recipient.Id}. Message={activity.AsMessageActivity()?.Text}");
         }
     }
 }
