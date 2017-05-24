@@ -27,7 +27,7 @@ namespace SampleAADV2Bot.Helpers
     {
         public string Token { get; set; }
 
-        public async Task<UserInfo > GetDisplayName()
+        public async Task<UserInfo > GetUserInfo()
         {
             try
             {
