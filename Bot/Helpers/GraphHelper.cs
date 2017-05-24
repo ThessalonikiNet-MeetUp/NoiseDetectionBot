@@ -25,7 +25,11 @@ namespace SampleAADV2Bot.Helpers
     }
     public class GraphHelper
     {
+        
         private string _token;
+
+        
+
 
         public GraphHelper(string token)
         {
@@ -65,6 +69,7 @@ namespace SampleAADV2Bot.Helpers
 
                 List<MeetingRoom> suggestions = new List<MeetingRoom>();
                 HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this._token);
 
                 var meetingresponse = await client.PostAsync("https://graph.microsoft.com/beta/me/findMeetingTimes", new StringContent(String.Empty));
 

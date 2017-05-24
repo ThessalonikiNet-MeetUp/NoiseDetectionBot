@@ -16,7 +16,7 @@ namespace SampleAADV2Bot.Dialogs
 
     [Serializable]
     public class ActionDialog : IDialog<string>
-    {
+    {     private string accessToken;
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -25,7 +25,8 @@ namespace SampleAADV2Bot.Dialogs
         public async Task TokenSample(IDialogContext context)
         {
             //endpoint v2
-            var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+             var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+            
 
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -64,9 +65,10 @@ namespace SampleAADV2Bot.Dialogs
             }
             else if (message.Text.StartsWith("NDBDATA"))
             {
+               
                 var messageinfo = message.Text.Split(';');
                 var messageDictionary = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
-                await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"]);//context.PostAsync("echo");
+                await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"],messageDictionary["token"]);//context.PostAsync("echo");
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "logout")
@@ -87,11 +89,12 @@ namespace SampleAADV2Bot.Dialogs
             await context.PostAsync(message);
             context.Wait(MessageReceivedAsync);
 
-            var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+             accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+            
 
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
-            await new User(
+            var deviceId =await new User(
                 userInfo.Mail,
                 userInfo.DisplayName,
                 context.Activity.From.Id,
@@ -102,6 +105,9 @@ namespace SampleAADV2Bot.Dialogs
                 accessToken,
                 context.Activity.Conversation.Id,
                 context.Activity.ChannelId).Save();
+
+
+            await context.PostAsync("Your device id ="+deviceId);
         }
     }
 }
