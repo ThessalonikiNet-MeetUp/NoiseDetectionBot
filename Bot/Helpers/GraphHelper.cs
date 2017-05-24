@@ -13,11 +13,21 @@ namespace SampleAADV2Bot.Helpers
         public string DisplayName { get; set; }
         public string LocationEmailAddress { get; set; }
     }
+
+    public class UserInfo
+    {
+        public string DisplayName { get; set; }
+        public string Firstname { get; set; }
+        public string Surname { get; set; }
+        public string JobTitle { get; set; }
+        public string Mail { get; set; }
+
+    }
     public class GraphHelper
     {
         public string Token { get; set; }
 
-        public async Task<string> GetDisplayName()
+        public async Task<UserInfo > GetDisplayName()
         {
             try
             {
@@ -27,7 +37,14 @@ namespace SampleAADV2Bot.Helpers
                 var userresponse = await client.GetAsync("https://graph.microsoft.com/beta/me/");
                 dynamic userInfo = JObject.Parse(await userresponse.Content.ReadAsStringAsync());
 
-                return userInfo.displayName;
+                return new UserInfo()
+                {
+                    DisplayName = userInfo.displayName,
+                    Firstname = userInfo.givenName,
+                    Mail = userInfo.mail,
+                    JobTitle = userInfo.jobTitle
+                };
+
 
             }
             catch (Exception)
