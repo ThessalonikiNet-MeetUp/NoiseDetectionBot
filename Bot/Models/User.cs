@@ -127,7 +127,7 @@ namespace SampleAADV2Bot.Models
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode} {body}.");
+                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode}.");
                 }
 
                 if (result.StatusCode == HttpStatusCode.Created)
