@@ -170,6 +170,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ConversationStarter.cs" />
+    <Compile Include="Helpers\GraphHelper.cs" />
     <Compile Include="Middleware\DebugActivityLogger.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\User.cs" />
