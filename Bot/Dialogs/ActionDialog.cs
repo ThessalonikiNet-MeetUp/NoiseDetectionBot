@@ -14,6 +14,8 @@ namespace SampleAADV2Bot.Dialogs
     using System.Collections.Generic;
     using SampleAADV2Bot.Helpers;
     using System.Net;
+    using System.Web.Script.Serialization;
+    using System.Diagnostics;
 
     [Serializable]
     public class ActionDialog : IDialog<string>
@@ -62,10 +64,18 @@ namespace SampleAADV2Bot.Dialogs
             }
             else if (message.Text.StartsWith("NDBDATA"))
             {
-               
                 var messageinfo = message.Text.Split(';');
-                var messageDictionary = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
-                await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"],messageDictionary["token"]);//context.PostAsync("echo");
+
+                try
+                {
+                    var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
+                    await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceWarning($"Error parsing NDBDATA. Exception={e.Message}");
+                }
+
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "logout")
@@ -105,7 +115,7 @@ namespace SampleAADV2Bot.Dialogs
             switch (statusCode)
             {
                 case HttpStatusCode.OK:
-                    await context.PostAsync($"Welcome back {user.DisplayName}.");
+                    await context.PostAsync($"Welcome back {user.DisplayName}! We're always listening....");
                     break;
                 case HttpStatusCode.Created:
                     await context.PostAsync($"Please enter the following into your listening device: {user.DeviceId}");
