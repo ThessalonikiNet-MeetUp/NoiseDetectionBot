@@ -32,7 +32,16 @@ namespace SampleAADV2Bot.Controllers
             //graphHelper.Token = accessToken;
             var userinfo = await graphHelper.GetUserInfo();
             var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
-            message.Text = $"Hello {userinfo.DisplayName}. It seems you're making a lot of noise! {meetingRoomsList.FirstOrDefault()?.DisplayName} is available. You could continue there!";
+            message.Text = $"Hello {userinfo.DisplayName}. It seems you're making a lot of noise!\n";// {meetingRoomsList.First()} is available. You could continue there!";
+            if (meetingRoomsList != null)
+            {
+                message.Text += "The following meeting rooms are available :\n";
+                foreach (var item in meetingRoomsList)
+                {
+                    message.Text += String.Format("{0}\t{1}", item.DisplayName, item.LocationEmailAddress);
+                }
+
+            }
             message.Locale = "en-Us";
             await connector.Conversations.SendToConversationAsync((Activity)message);
         }
