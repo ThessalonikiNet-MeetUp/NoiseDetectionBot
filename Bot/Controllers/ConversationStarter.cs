@@ -3,6 +3,7 @@ using Microsoft.Bot.Connector;
 using NoiseDetectionBot.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NoiseDetectionBot.Controllers
@@ -25,25 +26,28 @@ namespace NoiseDetectionBot.Controllers
                 conversationId = (await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount)).Id;
             }
 
+            message.Locale = "en-us";
             message.From = botAccount;
             message.Recipient = userAccount;
             message.Conversation = new ConversationAccount(id: conversationId);
-            var graphHelper = new GraphHelper(accessToken);
-            //graphHelper.Token = accessToken;
-            var userinfo = await graphHelper.GetUserInfo();
-            var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
-            message.Text = $"Hello {userinfo.DisplayName}. ";// {meetingRoomsList.First()} is available. You could continue there!";
-            if (meetingRoomsList != null)
-            {
-                message.Text += "The following meeting rooms are available :\n";
-                foreach (var item in meetingRoomsList)
-                {
-                    message.Text += String.Format("{0}\t{1}", item.DisplayName, item.LocationEmailAddress);
-                }
 
+            var graphHelper = new GraphHelper(accessToken);
+            var userInfo = await graphHelper.GetUserInfo();
+
+            if (userInfo.Item1)
+            {
+                var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
+                if (meetingRoomsList.Any())
+                {
+                    message.Text = $"Hello {userInfo.Item2.DisplayName},\n";
+                    message.Text += "The following meeting rooms are available :\n";
+                    foreach (var item in meetingRoomsList)
+                    {
+                        message.Text += String.Format("{0}\t{1}", item.DisplayName, item.LocationEmailAddress);
+                    }
+                }
             }
-            message.Locale = "en-Us";
-            //var reply = context.MakeMessage();
+
             var animationCard = new HeroCard
             {
                 Title = "It seems you're making too much noise",
@@ -55,8 +59,8 @@ namespace NoiseDetectionBot.Controllers
             message.Attachments.Add(animationCard);
             //await context.PostAsync(reply);
             //context.Wait(this.MessageReceivedAsync);
-            await connector.Conversations.SendToConversationAsync((Activity)message);
 
+            await connector.Conversations.SendToConversationAsync((Activity)message);
         }
     }
 }

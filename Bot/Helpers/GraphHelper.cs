@@ -20,8 +20,8 @@ namespace NoiseDetectionBot.Helpers
         public string Surname { get; set; }
         public string JobTitle { get; set; }
         public string Mail { get; set; }
-
     }
+
     public class GraphHelper
     {
         private string _token;
@@ -31,76 +31,82 @@ namespace NoiseDetectionBot.Helpers
             _token = token;
         }
 
-        public async Task<UserInfo > GetUserInfo()
+        public async Task<Tuple<bool, UserInfo>> GetUserInfo()
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this._token);
-
-                var userresponse = await client.GetAsync("https://graph.microsoft.com/beta/me/");
-
-                if (userresponse.StatusCode != System.Net.HttpStatusCode.OK )
+                using (HttpClient client = new HttpClient())
                 {
-                    Trace.TraceError($"GetUserInfo: StatusCode={userresponse.StatusCode}");
-                    return null;
+                    client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this._token);
+
+                    var response = await client.GetAsync("https://graph.microsoft.com/beta/me/");
+                    if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        Trace.TraceError($"GetUserInfo: StatusCode={response.StatusCode}");
+                        return Tuple.Create<bool, UserInfo>(false, null);
+                    }
+
+                    dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+                    var userInfo = new UserInfo()
+                    {
+                        DisplayName = responseBody.displayName,
+                        Firstname = responseBody.givenName,
+                        Mail = responseBody.userPrincipalName,
+                        JobTitle = responseBody.jobTitle,
+                    };
+
+                    return Tuple.Create(true, userInfo);
                 }
-                dynamic userInfo = JObject.Parse(await userresponse.Content.ReadAsStringAsync());
-
-                return new UserInfo()
-                {
-                    DisplayName = userInfo.displayName,
-                    Firstname = userInfo.givenName,
-                    Mail = userInfo.userPrincipalName,
-                    JobTitle = userInfo.jobTitle
-                };
             }
             catch (Exception e)
             {
                 Trace.TraceError($"GetUserInfo: Exception={e.Message}.");
-                throw;
-            }           
+                return Tuple.Create<bool, UserInfo>(false, null);
+            }
         }
 
         public async Task<List<MeetingRoom>> GetMeetingRoomSuggestions()
         {
+            var suggestions = new List<MeetingRoom>();
             try
             {
-
-                List<MeetingRoom> suggestions = new List<MeetingRoom>();
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + this._token);
-
-                var meetingresponse = await client.PostAsync("https://graph.microsoft.com/beta/me/findMeetingTimes", new StringContent(String.Empty));
-
-                if (meetingresponse.StatusCode !=  System.Net.HttpStatusCode.OK )
+                using (var client = new HttpClient())
                 {
-                    Trace.WriteLine("GetMeetingRoomSuggestions , StatusCode={0}", meetingresponse.StatusCode.ToString());
-                }
-                dynamic meetingTimes = JObject.Parse(await meetingresponse.Content.ReadAsStringAsync());
+                    client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {this._token}");
 
-                foreach (var item in meetingTimes.meetingTimeSuggestions[0].locations)
-                {
-                    // Add only locations with an email address -> meeting rooms
-                    if (!String.IsNullOrEmpty(item.locationEmailAddress.ToString()))
-                        suggestions.Add(new MeetingRoom()
+                    var meetingResponse = await client.PostAsync("https://graph.microsoft.com/beta/me/findMeetingTimes", new StringContent(String.Empty));
+
+                    if (meetingResponse.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        Trace.TraceError($"GetMeetingRoomSuggestions: StatusCode={meetingResponse.StatusCode}");
+                        return suggestions;
+                    }
+
+                    dynamic meetingTimes = JObject.Parse(await meetingResponse.Content.ReadAsStringAsync());
+
+                    foreach (var item in meetingTimes.meetingTimeSuggestions.First().locations)
+                    {
+                        // Add only locations with an email address -> meeting rooms
+                        if (!String.IsNullOrEmpty(item.locationEmailAddress.ToString()))
                         {
-                            DisplayName = item.displayName,
-                            LocationEmailAddress = item.locationEmailAddress
-                        });
-           
+                            suggestions.Add(new MeetingRoom()
+                            {
+                                DisplayName = item.displayName,
+                                LocationEmailAddress = item.locationEmailAddress
+                            });
+                        }
+                    }
+
+                    return suggestions;
                 }
 
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError($"GetMeetingRoomSuggestions: Exception={e.Message}.");
                 return suggestions;
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        
-        
         }
-
     }
 }

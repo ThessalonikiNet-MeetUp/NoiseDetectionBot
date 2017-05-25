@@ -56,7 +56,6 @@ namespace NoiseDetectionBot.Dialogs
             }
             else if (message.Text == "echo")
             {
-
                 var reply = context.MakeMessage();
                 var animationCard = new HeroCard
                 {
@@ -81,7 +80,6 @@ namespace NoiseDetectionBot.Dialogs
                 try
                 {
                     var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
-                   
                     await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
                     
                 }
@@ -113,9 +111,12 @@ namespace NoiseDetectionBot.Dialogs
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
 
+            var userEmail = userInfo.Item1 ? userInfo.Item2.Mail : String.Empty;
+            var displayName = userInfo.Item1 ? userInfo.Item2.DisplayName : String.Empty;
+
             var user = new User(
-                userInfo.Mail,
-                userInfo.DisplayName,
+                userEmail,
+                displayName,
                 context.Activity.From.Id,
                 context.Activity.From.Name,
                 context.Activity.Recipient.Id,
