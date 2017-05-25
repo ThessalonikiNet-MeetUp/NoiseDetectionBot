@@ -41,8 +41,8 @@ namespace NoiseDetectionBot.Controllers
                 Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
                 //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
             }.ToAttachment();
-            if (userInfo.Item1)
-            {
+          //  if (userInfo.Item1)
+           // {
                 var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
                 if (meetingRoomsList.Any())
                 {
@@ -56,7 +56,7 @@ namespace NoiseDetectionBot.Controllers
                     }.ToAttachment();
 
                 }
-            }
+          //  }
 
 
             message.Attachments.Add(animationCard);
