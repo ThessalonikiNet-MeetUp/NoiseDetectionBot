@@ -50,18 +50,19 @@ namespace NoiseDetectionBot.Controllers
                     {
                         Title = $"Hello { userInfo.Item2.DisplayName }.",
                         Subtitle = $" It seems you're making a lot of noise!\n",
-                        Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x=>x.DisplayName).ToList()) }. Would you like to continue there?",
+                        Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
                         Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
                         //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
                     }.ToAttachment();
-                   
+
                 }
             }
 
-           
+
             message.Attachments.Add(animationCard);
            
 
+            await connector.Conversations.SendToConversationAsync((Activity)message);
             await connector.Conversations.SendToConversationAsync((Activity)message);
         }
     }

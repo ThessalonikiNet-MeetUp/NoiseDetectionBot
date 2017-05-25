@@ -85,7 +85,7 @@ namespace NoiseDetectionBot.Helpers
 
                     dynamic meetingTimes = JObject.Parse(await meetingResponse.Content.ReadAsStringAsync());
 
-                    foreach (var item in meetingTimes.meetingTimeSuggestions.First().locations)
+                    foreach (var item in meetingTimes.meetingTimeSuggestions[0].locations)
                     {
                         // Add only locations with an email address -> meeting rooms
                         if (!String.IsNullOrEmpty(item.locationEmailAddress.ToString()))
