@@ -183,7 +183,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages.config" />
+    <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\NoiseDetectionBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -128,7 +129,7 @@ namespace SampleAADV2Bot.Models
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    await Console.Error.WriteLineAsync($"Error. Failed saving user {result.StatusCode} {body}.");
+                    Trace.TraceError($"Error. Failed saving user {result.StatusCode} {body}.");
                 }
 
                 if (result.StatusCode == HttpStatusCode.Created)
