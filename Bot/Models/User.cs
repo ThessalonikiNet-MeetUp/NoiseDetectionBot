@@ -133,7 +133,7 @@ namespace NoiseDetectionBot.Models
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    Trace.TraceError($"Error. Failed saving user {result.StatusCode} {body}.");
+                    Trace.TraceError($"User: Error. Failed saving user {result.StatusCode} {body}.");
                 }
 
                 if (result.StatusCode == HttpStatusCode.Created)

@@ -165,8 +165,13 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
-    <Content Include="Images\shht.jpg" />
-    <Content Include="Web.config">
+    <Content Include="Images\shh1.gif" />
+    <Content Include="Images\ssh2.gif" />
+    <Content Include="Images\ssh3.gif" />
+    <Content Include="Images\ssh4.gif" />
+    <Content Include="Images\ssh5.gif" />
+    <Content Include="Images\ssh6.gif" />
+    <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -187,12 +192,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\NoiseDetectionBot - Web Deploy.pubxml" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
