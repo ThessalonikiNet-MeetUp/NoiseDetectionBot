@@ -34,12 +34,16 @@ namespace NoiseDetectionBot.Controllers
 
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
+            Random rnd = new Random();
+            int fileindex = rnd.Next(1, 7);
+            string fileurl = "https://github.com/ThessalonikiNet-MeetUp/NoiseDetectionBot/blob/master/Bot/Images/shh" + fileindex +".gif"
+            
             var animationCard = new HeroCard
             {
                 Title = $"Hello { userInfo.Item2.DisplayName }.",
                 Subtitle = $" It seems you're making a lot of noise!\n",
                 Text = "",
-                Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
+                Images = new List<CardImage> { new CardImage(fileurl) },
                 //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
             }.ToAttachment();
             if (userInfo.Item1)
@@ -54,7 +58,7 @@ namespace NoiseDetectionBot.Controllers
                         Title = $"Hello { userInfo.Item2.DisplayName }.",
                         Subtitle = $" It seems you're making a lot of noise!\n",
                         Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
-                        Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
+                        Images = new List<CardImage> { new CardImage(fileurl) },
                         //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
                     }.ToAttachment();
 
