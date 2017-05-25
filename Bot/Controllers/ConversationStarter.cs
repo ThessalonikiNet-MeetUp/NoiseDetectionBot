@@ -62,7 +62,7 @@ namespace NoiseDetectionBot.Controllers
             message.Attachments.Add(animationCard);
            
 
-            await connector.Conversations.SendToConversationAsync((Activity)message);
+            //await connector.Conversations.SendToConversationAsync((Activity)message);
             await connector.Conversations.SendToConversationAsync((Activity)message);
         }
     }
