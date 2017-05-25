@@ -85,7 +85,7 @@ namespace NoiseDetectionBot.Dialogs
                 }
                 catch (Exception e)
                 {
-                    Trace.TraceError($"Error parsing NDBDATA. Exception={e.Message}");
+                    Trace.TraceError($"ActionDialog: Error parsing NDBDATA. Exception={e.Message}");
                 }
 
                 context.Wait(this.MessageReceivedAsync);

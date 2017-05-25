@@ -17,7 +17,7 @@ namespace NoiseDetectionBot.Controllers
             var botAccount = new ChannelAccount(fromId, fromName);
             var connector = new ConnectorClient(new Uri(serviceUrl));
 
-            IMessageActivity message = Activity.CreateMessageActivity();
+            var message = Activity.CreateMessageActivity();
             if (!string.IsNullOrEmpty(conversationId) && !string.IsNullOrEmpty(channelId))
             {
                 message.ChannelId = channelId;
@@ -39,9 +39,11 @@ namespace NoiseDetectionBot.Controllers
                 Title = $"Hello { userInfo.Item2.DisplayName }.",
                 Subtitle = $" It seems you're making a lot of noise!\n",
                 Text = "",
-                Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
-                //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
+                Images = new List<CardImage> {
+                    new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif")
+                },
             }.ToAttachment();
+
             if (userInfo.Item1)
             {
                 var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
@@ -54,8 +56,9 @@ namespace NoiseDetectionBot.Controllers
                         Title = $"Hello { userInfo.Item2.DisplayName }.",
                         Subtitle = $" It seems you're making a lot of noise!\n",
                         Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
-                        Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
-                        //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
+                        Images = new List<CardImage> {
+                            new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif")
+                        },
                     }.ToAttachment();
 
                 }
