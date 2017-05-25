@@ -36,7 +36,7 @@ namespace NoiseDetectionBot.Controllers
             var userInfo = await graphHelper.GetUserInfo();
             Random rnd = new Random();
             int fileindex = rnd.Next(1, 7);
-            string fileurl = "https://github.com/ThessalonikiNet-MeetUp/NoiseDetectionBot/blob/master/Bot/Images/shh" + fileindex +".gif";
+            string fileurl = "https://github.com/ThessalonikiNet-MeetUp/NoiseDetectionBot/raw/master/Bot/Images/shh" + fileindex +".gif";
             
             var animationCard = new HeroCard
             {
