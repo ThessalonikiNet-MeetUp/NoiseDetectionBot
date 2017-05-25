@@ -3,6 +3,7 @@ using Microsoft.Bot.Connector;
 using NoiseDetectionBot.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,9 +42,11 @@ namespace NoiseDetectionBot.Controllers
                 Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
                 //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
             }.ToAttachment();
-          //  if (userInfo.Item1)
-           // {
+            if (userInfo.Item1)
+            {
                 var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
+
+                Trace.TraceInformation($"GetMeetingRoomSuggestions: Found {meetingRoomsList.Count} rooms.");
                 if (meetingRoomsList.Any())
                 {
                     animationCard = new HeroCard
@@ -56,13 +59,10 @@ namespace NoiseDetectionBot.Controllers
                     }.ToAttachment();
 
                 }
-          //  }
-
+            }
 
             message.Attachments.Add(animationCard);
            
-
-            //await connector.Conversations.SendToConversationAsync((Activity)message);
             await connector.Conversations.SendToConversationAsync((Activity)message);
         }
     }
