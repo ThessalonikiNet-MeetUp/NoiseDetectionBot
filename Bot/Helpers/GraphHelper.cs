@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace SampleAADV2Bot.Helpers
 {
@@ -26,11 +24,7 @@ namespace SampleAADV2Bot.Helpers
     }
     public class GraphHelper
     {
-        
         private string _token;
-
-        
-
 
         public GraphHelper(string token)
         {
@@ -48,7 +42,7 @@ namespace SampleAADV2Bot.Helpers
 
                 if (userresponse.StatusCode != System.Net.HttpStatusCode.OK )
                 {
-                    Trace.WriteLine("GetUserInfo , StatusCode={0}\n", userresponse.StatusCode.ToString());
+                    Trace.TraceError($"GetUserInfo: StatusCode={userresponse.StatusCode}");
                     return null;
                 }
                 dynamic userInfo = JObject.Parse(await userresponse.Content.ReadAsStringAsync());
@@ -61,8 +55,9 @@ namespace SampleAADV2Bot.Helpers
                     JobTitle = userInfo.jobTitle
                 };
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Trace.TraceError($"GetUserInfo: Exception={e.Message}.");
                 throw;
             }           
         }

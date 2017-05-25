@@ -73,7 +73,7 @@ namespace SampleAADV2Bot.Dialogs
                 }
                 catch (Exception e)
                 {
-                    Trace.TraceWarning($"Error parsing NDBDATA. Exception={e.Message}");
+                    Trace.TraceError($"Error parsing NDBDATA. Exception={e.Message}");
                 }
 
                 context.Wait(this.MessageReceivedAsync);
