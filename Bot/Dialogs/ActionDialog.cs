@@ -87,8 +87,9 @@ namespace NoiseDetectionBot.Dialogs
                     var serviceUrl = messageDictionary["serviceUrl"];
                     var token = messageDictionary["token"];
 
-                    Trace.TraceError($"ActionDialog: Sending notification to {recipientName}.");
+                    Trace.TraceInformation($"ActionDialog: Sending notification to {recipientName}.");
                     await ConversationStarter.Resume(conversationId, channelId, recipientId, recipientName, message.Recipient.Id, message.Recipient.Name, serviceUrl, token);
+                    Trace.TraceInformation($"ActionDialog: Notification to {recipientName}.");
                 }
                 catch (Exception e)
                 {
