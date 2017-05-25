@@ -32,7 +32,7 @@ namespace SampleAADV2Bot.Controllers
             //graphHelper.Token = accessToken;
             var userinfo = await graphHelper.GetUserInfo();
             var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
-            message.Text = $"Hello {userinfo.DisplayName}. It seems you're making a lot of noise!\n";// {meetingRoomsList.First()} is available. You could continue there!";
+            message.Text = $"Hello {userinfo.DisplayName}. ";// {meetingRoomsList.First()} is available. You could continue there!";
             if (meetingRoomsList != null)
             {
                 message.Text += "The following meeting rooms are available :\n";
@@ -44,6 +44,7 @@ namespace SampleAADV2Bot.Controllers
             }
             message.Locale = "en-Us";
             await connector.Conversations.SendToConversationAsync((Activity)message);
+
         }
     }
 }
