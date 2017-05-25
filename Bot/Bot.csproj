@@ -45,7 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AuthBot, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>....\packages\AuthBot.3.6.4-alpha\lib\net40\AuthBot.dll</HintPath>
+      <HintPath>..\packages\AuthBot.3.6.4-alpha\lib\net40\AuthBot.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Autofac, Version=4.6.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
