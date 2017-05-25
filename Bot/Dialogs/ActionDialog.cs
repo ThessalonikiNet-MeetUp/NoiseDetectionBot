@@ -80,8 +80,15 @@ namespace NoiseDetectionBot.Dialogs
                 try
                 {
                     var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
-                    await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
-                    
+                    var conversationId = messageDictionary["conversationId"];
+                    var channelId = messageDictionary["channelId"];
+                    var recipientId = messageDictionary["recipientId"];
+                    var recipientName = messageDictionary["recipientName"];
+                    var serviceUrl = messageDictionary["serviceUrl"];
+                    var token = messageDictionary["token"];
+
+                    Trace.TraceError($"ActionDialog: Sending notification to {recipientName}.");
+                    await ConversationStarter.Resume(conversationId, channelId, recipientId, recipientName, message.Recipient.Id, message.Recipient.Name, serviceUrl, token);
                 }
                 catch (Exception e)
                 {

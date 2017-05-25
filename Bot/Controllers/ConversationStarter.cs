@@ -60,7 +60,6 @@ namespace NoiseDetectionBot.Controllers
                         Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
                         Images = new List<CardImage> { new CardImage(fileurl) },
                     }.ToAttachment();
-
                 }
             }
 
