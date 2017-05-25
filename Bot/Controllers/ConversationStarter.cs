@@ -2,6 +2,7 @@
 using Microsoft.Bot.Connector;
 using NoiseDetectionBot.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NoiseDetectionBot.Controllers
@@ -42,6 +43,18 @@ namespace NoiseDetectionBot.Controllers
 
             }
             message.Locale = "en-Us";
+            //var reply = context.MakeMessage();
+            var animationCard = new HeroCard
+            {
+                Title = "It seems you're making too much noise",
+                Subtitle = "",
+                Text = "Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.",
+                Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
+                //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
+            }.ToAttachment();
+            message.Attachments.Add(animationCard);
+            //await context.PostAsync(reply);
+            //context.Wait(this.MessageReceivedAsync);
             await connector.Conversations.SendToConversationAsync((Activity)message);
 
         }
