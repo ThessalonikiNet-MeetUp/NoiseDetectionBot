@@ -57,7 +57,7 @@ namespace SampleAADV2Bot.Helpers
                 {
                     DisplayName = userInfo.displayName,
                     Firstname = userInfo.givenName,
-                    Mail = userInfo.mail,
+                    Mail = userInfo.userPrincipalName,
                     JobTitle = userInfo.jobTitle
                 };
             }
