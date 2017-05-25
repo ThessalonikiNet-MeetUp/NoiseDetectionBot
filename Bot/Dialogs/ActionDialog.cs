@@ -19,7 +19,8 @@ namespace NoiseDetectionBot.Dialogs
 
     [Serializable]
     public class ActionDialog : IDialog<string>
-    {     private string accessToken;
+    {
+        private string accessToken;
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -28,8 +29,8 @@ namespace NoiseDetectionBot.Dialogs
         public async Task TokenSample(IDialogContext context)
         {
             //endpoint v2
-             var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
-            
+            var accessToken = await context.GetAccessToken(AuthSettings.Scopes);
+
             if (string.IsNullOrEmpty(accessToken))
             {
                 return;
@@ -55,7 +56,26 @@ namespace NoiseDetectionBot.Dialogs
             }
             else if (message.Text == "echo")
             {
-                await context.PostAsync("echo");
+
+                var reply = context.MakeMessage();
+                var animationCard = new AnimationCard
+                {
+                    Title = "Could you please be more quiet?",
+                    Subtitle = "",
+                    Image = new ThumbnailUrl
+                    {
+                        Url = "https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png"
+                    },
+                    Media = new List<MediaUrl>
+                {
+                    new MediaUrl()
+                    {
+                        Url = "https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif"
+                    }
+                }
+                }.ToAttachment();
+                reply.Attachments.Add(animationCard);
+                await context.PostAsync(reply);
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "token")
@@ -69,7 +89,9 @@ namespace NoiseDetectionBot.Dialogs
                 try
                 {
                     var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
+                   
                     await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
+                    
                 }
                 catch (Exception e)
                 {
@@ -95,7 +117,7 @@ namespace NoiseDetectionBot.Dialogs
             await context.PostAsync(message);
 
             accessToken = await context.GetAccessToken(AuthSettings.Scopes);
-            
+
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
 
