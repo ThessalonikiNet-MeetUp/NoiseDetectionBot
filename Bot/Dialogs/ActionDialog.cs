@@ -71,6 +71,8 @@ namespace SampleAADV2Bot.Dialogs
                 try
                 {
                     var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
+                   
+                    await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
                     var reply = context.MakeMessage();
                     var animationCard = new AnimationCard
                     {
@@ -90,7 +92,7 @@ namespace SampleAADV2Bot.Dialogs
                     }.ToAttachment();
                     reply.Attachments.Add(animationCard);
                     await context.PostAsync(reply);
-                    await ConversationStarter.Resume(messageDictionary["conversationId"], messageDictionary["channelId"], messageDictionary["recipientId"], messageDictionary["recipientName"], message.Recipient.Id, message.Recipient.Name, messageDictionary["serviceUrl"], messageDictionary["token"]);//context.PostAsync("echo");
+                    context.Wait(this.MessageReceivedAsync);
                 }
                 catch (Exception e)
                 {
