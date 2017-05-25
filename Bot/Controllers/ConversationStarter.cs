@@ -34,6 +34,7 @@ namespace NoiseDetectionBot.Controllers
 
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
+
             Random rnd = new Random();
             int fileindex = rnd.Next(1, 7);
             string fileurl = $"https://raw.githubusercontent.com/ThessalonikiNet-MeetUp/NoiseDetectionBot/master/Bot/Images/shh{fileindex}.gif";

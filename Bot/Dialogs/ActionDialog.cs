@@ -79,7 +79,9 @@ namespace NoiseDetectionBot.Dialogs
 
                 try
                 {
-                    var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(messageinfo[1]);
+                    var body = messageinfo[1];
+                    Trace.TraceInformation($"ActionDialog: parsing {body}.");
+                    var messageDictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(body);
                     var conversationId = messageDictionary["conversationId"];
                     var channelId = messageDictionary["channelId"];
                     var recipientId = messageDictionary["recipientId"];
