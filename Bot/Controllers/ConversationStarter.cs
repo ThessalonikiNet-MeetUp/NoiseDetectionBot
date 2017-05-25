@@ -33,32 +33,34 @@ namespace NoiseDetectionBot.Controllers
 
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
-
+            var animationCard = new HeroCard
+            {
+                Title = $"Hello { userInfo.Item2.DisplayName }.",
+                Subtitle = $" It seems you're making a lot of noise!\n",
+                Text = "",
+                Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
+                //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
+            }.ToAttachment();
             if (userInfo.Item1)
             {
                 var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
                 if (meetingRoomsList.Any())
                 {
-                    message.Text = $"Hello {userInfo.Item2.DisplayName},\n";
-                    message.Text += "The following meeting rooms are available :\n";
-                    foreach (var item in meetingRoomsList)
+                    animationCard = new HeroCard
                     {
-                        message.Text += String.Format("{0}\t{1}", item.DisplayName, item.LocationEmailAddress);
-                    }
+                        Title = $"Hello { userInfo.Item2.DisplayName }.",
+                        Subtitle = $" It seems you're making a lot of noise!\n",
+                        Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x=>x.DisplayName).ToList()) }. Would you like to continue there?",
+                        Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
+                        //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
+                    }.ToAttachment();
+                   
                 }
             }
 
-            var animationCard = new HeroCard
-            {
-                Title = "It seems you're making too much noise",
-                Subtitle = "",
-                Text = "Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.",
-                Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
-                //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
-            }.ToAttachment();
+           
             message.Attachments.Add(animationCard);
-            //await context.PostAsync(reply);
-            //context.Wait(this.MessageReceivedAsync);
+           
 
             await connector.Conversations.SendToConversationAsync((Activity)message);
         }
