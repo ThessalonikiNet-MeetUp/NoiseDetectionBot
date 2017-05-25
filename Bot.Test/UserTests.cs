@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleAADV2Bot.Models;
+using NoiseDetectionBot.Models;
 
 namespace Bot.Test
 {

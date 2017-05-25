@@ -1,4 +1,4 @@
-﻿namespace SampleAADV2Bot.Middleware
+﻿namespace NoiseDetectionBot.Middleware
 {
     using System.Diagnostics;
     using System.Threading.Tasks;

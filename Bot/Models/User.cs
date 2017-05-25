@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleAADV2Bot.Models
+namespace NoiseDetectionBot.Models
 {
     [DataContract]
     public class User

@@ -1,8 +1,8 @@
-﻿namespace SampleAADV2Bot
+﻿namespace NoiseDetectionBot
 {
     using Autofac;
     using Microsoft.Bot.Builder.Dialogs;
-    using SampleAADV2Bot.Middleware;
+    using NoiseDetectionBot.Middleware;
     using System.Configuration;
     using System.Web.Http;
 

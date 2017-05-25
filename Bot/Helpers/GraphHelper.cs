@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SampleAADV2Bot.Helpers
+namespace NoiseDetectionBot.Helpers
 {
     public class MeetingRoom
     {

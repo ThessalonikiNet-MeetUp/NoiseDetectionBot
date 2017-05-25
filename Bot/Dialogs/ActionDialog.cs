@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
-namespace SampleAADV2Bot.Dialogs
+namespace NoiseDetectionBot.Dialogs
 {
     using System;
     using System.Threading;
@@ -9,10 +9,10 @@ namespace SampleAADV2Bot.Dialogs
     using AuthBot.Models;
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Connector;
-    using SampleAADV2Bot.Controllers;
-    using SampleAADV2Bot.Models;
+    using NoiseDetectionBot.Controllers;
+    using NoiseDetectionBot.Models;
     using System.Collections.Generic;
-    using SampleAADV2Bot.Helpers;
+    using NoiseDetectionBot.Helpers;
     using System.Net;
     using System.Web.Script.Serialization;
     using System.Diagnostics;

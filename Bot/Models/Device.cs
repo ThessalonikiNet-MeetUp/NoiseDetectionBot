@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace SampleAADV2Bot.Models
+namespace NoiseDetectionBot.Models
 {
     [DataContract]
     public class Device

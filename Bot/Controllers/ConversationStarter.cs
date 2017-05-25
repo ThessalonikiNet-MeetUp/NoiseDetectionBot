@@ -1,11 +1,10 @@
 ﻿
 using Microsoft.Bot.Connector;
-using SampleAADV2Bot.Helpers;
+using NoiseDetectionBot.Helpers;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
 
-namespace SampleAADV2Bot.Controllers
+namespace NoiseDetectionBot.Controllers
 {
     public class ConversationStarter
     {
