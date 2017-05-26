@@ -59,7 +59,7 @@ namespace NoiseDetectionBot.Controllers
                     {
                         Title = $"Hello { userInfo.Item2.DisplayName }.",
                         Subtitle = $" It seems you're making a lot of noise!\n",
-                        Text = $"The following meeting rooms are available : {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
+                        Text = $"The following meeting rooms are available: {string.Join(",", meetingRoomsList.Select(x => x.DisplayName).ToList()) }. Would you like to continue there?",
                         Images = new List<CardImage> { new CardImage(fileurl) },
                     }.ToAttachment();
                 }
