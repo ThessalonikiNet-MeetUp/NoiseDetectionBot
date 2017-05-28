@@ -56,17 +56,7 @@ namespace NoiseDetectionBot.Dialogs
             }
             else if (message.Text == "echo")
             {
-                var reply = context.MakeMessage();
-                var animationCard = new HeroCard
-                {
-                    Title = "It seems you're making too much noise",
-                    Subtitle = "",
-                    Text = "Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.",
-                    Images = new List<CardImage> { new CardImage("https://media.giphy.com/media/xT5LML6QL8ft5UsC6Q/giphy.gif") },
-                    //Buttons = new List<CardAction> { new CardAction(ActionTypes.OpenUrl, "", value: "https://docs.microsoft.com/bot-framework") }
-                }.ToAttachment();
-                reply.Attachments.Add(animationCard);
-                await context.PostAsync(reply);
+                await context.PostAsync("echo");
                 context.Wait(this.MessageReceivedAsync);
             }
             else if (message.Text == "token")
