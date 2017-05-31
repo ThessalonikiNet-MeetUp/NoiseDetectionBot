@@ -35,24 +35,35 @@ namespace NoiseDetectionBot.Controllers
             var graphHelper = new GraphHelper(accessToken);
             var userInfo = await graphHelper.GetUserInfo();
 
+            Trace.TraceInformation($"userInfo:{userInfo}");
             Random rnd = new Random();
             int fileindex = rnd.Next(1, 7);
             string fileurl = $"https://raw.githubusercontent.com/ThessalonikiNet-MeetUp/NoiseDetectionBot/master/Bot/Images/shh{fileindex}.gif";
             Trace.TraceInformation($"GetMeetingRoomSuggestions: Image={fileurl}.");
-            
+
+            // Handle cases when user information is not available
             var animationCard = new HeroCard
             {
-                Title = $"Hello { userInfo.Item2.DisplayName }.",
+                Title = $"Hello!",
                 Subtitle = $" It seems you're making a lot of noise!\n",
                 Text = "",
                 Images = new List<CardImage> { new CardImage(fileurl) },
             }.ToAttachment();
-
-            if (userInfo.Item1)
+            
+            if (userInfo != null && userInfo.Item1 == true) 
             {
+                animationCard = new HeroCard
+                {
+                    Title = $"Hello { userInfo.Item2.DisplayName }.",
+                    Subtitle = $" It seems you're making a lot of noise!\n",
+                    Text = "",
+                    Images = new List<CardImage> { new CardImage(fileurl) },
+                }.ToAttachment();
+
                 var meetingRoomsList = await graphHelper.GetMeetingRoomSuggestions();
 
                 Trace.TraceInformation($"GetMeetingRoomSuggestions: Found {meetingRoomsList.Count} rooms.");
+                
                 if (meetingRoomsList.Any())
                 {
                     animationCard = new HeroCard
@@ -65,6 +76,7 @@ namespace NoiseDetectionBot.Controllers
                 }
             }
 
+            Trace.TraceInformation($"animationCard: {animationCard}");
             message.Attachments.Add(animationCard);
            
             await connector.Conversations.SendToConversationAsync((Activity)message);
